@@ -2,7 +2,7 @@
 # Allows sending packets between Hosts A <-> B, while logging each packet
 # Simulates either SUSS or traditional TCP sending behavior
 
-import socket
+import TCPTools.py
 
 # Networking
 HostA = '10.0.1.1'
@@ -16,17 +16,6 @@ SUSS = None # Set to true if A -> B, false if B -> A
 # Logging
 logfile = open("SUSSsend.log", 'a')
 logfile.write("--- SUSSsend.py Log ---\n")
-
-def printLog(s:str):
-    print(s)
-    logfile.write(s+'\n')
-# TODO: printlog, showing timestamps and seq# for send pkts / recv acks
-# '-> send info'
-# '<- recv info'
-
-# TCP Wrappers
-def Send(socket, msg): socket.sendall(msg.encode())
-def Recieve(socket) -> str: return socket.recv(1024).decode()
 
 
 # Prompt to set dest to either A or B
