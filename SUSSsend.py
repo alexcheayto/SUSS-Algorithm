@@ -2,9 +2,12 @@
 # Allows sending packets between Hosts A <-> B, while logging each packet
 # Simulates either SUSS or traditional TCP sending behavior
 
-import TCPTools.py
+import time
+
+import TCPTools as TCP
 
 # Networking
+loopback = '127.0.0.1'
 HostA = '10.0.1.1'
 HostB = '10.0.2.2'
 
@@ -34,12 +37,12 @@ while not dest:
 
 while True: # Main Loop
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.connect((SERVER_HOST, SERVER_PORT)) # socket for server
+    server.connect((loopback, port)) # socket for server
 
     numPkts = int(input("How many packets to send? (try 10): "))
-    while numPkts:
-        break
-        # TODO Send pkts according to SUSS or TCP rules
+    for i in range(numPkts):
+        TCP.send(f"packet #{numPkts}")
+        time.sleep(0.5)
 
 
 ### TODO: Pseudocode for now
