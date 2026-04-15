@@ -13,7 +13,7 @@ log.write("--- SUSS Log ---\n")
 HOST = "127.0.0.1"
 PORT = 9999
 
-processDelay = 0.1 # How long to process each pkt (in sec)
+processDelay = 0.05 # How long to process each pkt (in sec)
 
 
 # Main

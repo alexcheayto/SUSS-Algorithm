@@ -13,7 +13,7 @@ HOST = '127.0.0.1'
 PORT = 9999
 
 # Adjust these to change behavior of nw
-totalPkts = 100 # how mae.time()ny pkts to send?
+totalPkts = 1000 # how many pkts to send?
 roundLength = 4.0 # Round Length in sec
 
 lastPktSent = 0 # Increments with each pkt
@@ -75,36 +75,38 @@ s = TCP.Client(HOST, PORT) # Connect to server
 while not fin: # Go until sent all pkts
 
     roundNum += 1
-    print(f"=== Round {roundNum}: {roundSize} ===")
+    print(f"=== Round {roundNum} ===")
 
-    if not slowStart or lastPktSent + roundSize > totalPkts: # exited SS or final round
-        print("--- Exited Slow Start ---")
-        Pace(roundLength, roundSize) # Just send pkts evenly
-        break
+    if not slowStart or lastPktSent + roundSize + roundNum > totalPkts: # exited SS or final round
+        print("--- AIMD ---")
+        Pace(roundLength, roundSize + roundNum) # Just send pkts evenly
 
-    roundStart = time.time()
-    clockEst = roundLength * 1/8 # Benchmark for upcoming clock
+    else:
+        roundStart = time.time()
+        clockEst = roundLength * 1/8 # Benchmark for upcoming clock
 
-    print("--- Clock Phase ---")
-    Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
+        print("--- Clock Phase ---")
+        Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
 
-    clockActual = time.time() - roundStart # How long was clock phase?
+        clockActual = time.time() - roundStart # How long was clock phase?
 
-    print("--- Guard Phase ---")
-    Guard(roundStart + roundLength * 2/8) # Guard phase: wait to give clock phase time
+        print("--- Guard Phase ---")
+        Guard(roundStart + roundLength * 2/8) # Guard phase: wait to give clock phase time
 
-    print("--- Pace Phase ---")
-    Pace(roundLength * 6/8, roundSize - int(math.sqrt(roundSize))) # Pace the rest of the pkts
+        print("--- Pace Phase ---")
+        Pace(roundLength * 6/8, roundSize - int(math.sqrt(roundSize))) # Pace the rest of the pkts
 
-    print("--- Gi Estimation ---")
-    ratio = clockActual / clockEst
-    if   ratio < 0.5: Gi = 4 # Far from optimal, SUSS
-    elif ratio < 1.0: Gi = 2 # Nearing optimal, traditional SS
-    else: slowStart = False # Close to optimal, exit slow start
+        print("--- Gi Estimation ---")
+        ratio = clockActual / clockEst
+        if   ratio < 0.5: Gi = 4 # Far from optimal, SUSS
+        elif ratio < 1.0: Gi = 2 # Nearing optimal, traditional SS
+        else:
+            Gi = 1
+            slowStart = False # Close to optimal, exit slow start
 
-    print(f"Est    = {clockEst}")
-    print(f"Actual = {clockActual}")
-    print(f"Ratio  = {ratio}")
-    print(f"Gi     = {Gi}")
+        print(f"Est    = {clockEst}")
+        print(f"Actual = {clockActual}")
+        print(f"Ratio  = {ratio}")
+        print(f"Gi     = {Gi}")
 
-    roundSize *= Gi
+        roundSize *= Gi
