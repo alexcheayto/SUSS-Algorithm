@@ -27,6 +27,9 @@ Gi = 4 # Estimate growth rate for current round
 
 # SUSS Phases
 def Clock(phaseLength, phasePkts): # Send pkts in a burst
+    global fin
+    global lastPktSent
+
     for i in range(lastPktSent, lastPktSent + phasePkts):
         lastPktSent = i
         fin = (i == totalPkts-1)
@@ -43,7 +46,8 @@ def Guard(endTime): # Wait until a specific time
         guarding = time.time() < endTime
 
 def Pace(phaseLength, phasePkts):
-    global lastPktSent, fin
+    global fin
+    global lastPktSent
 
     for i in range(lastPktSent, lastPktSent + phasePkts):
         lastPktSent = i
@@ -64,20 +68,20 @@ while not fin: # Go until sent all pkts
     roundNum += 1
     print(f"Round {roundNum}: {roundSize}")
 
-    if not slowStart or lastPktSent + roundSize > numPkts: # exited SS or final round
+    if not slowStart or lastPktSent + roundSize > totalPkts: # exited SS or final round
         Pace(roundLength, roundSize) # Just send pkts evenly
         break
 
     roundStart = time.time()
     ClockEst = roundStart + roundLength * 1/8 # Benchmark for upcoming clock
 
-    Clock(roundLength * 1/8, math.sqrt(roundSize)) # send clock pkts
+    Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
 
-    ClockActual = Time.time() - roundStart # How long was clock phase?
+    ClockActual = time.time() - roundStart # How long was clock phase?
 
     Guard(roundStart + roundLength * 2/8) # Guard phase: wait to give clock phase time
 
-    Pace(roundLength * 6/8, roundSize - math.sqrt(roundSize)) # Pace the rest of the pkts
+    Pace(roundLength * 6/8, roundSize - int(math.sqrt(roundSize))) # Pace the rest of the pkts
 
     # Gi estimation based on clock phase measurements
     roundSize *= Gi
