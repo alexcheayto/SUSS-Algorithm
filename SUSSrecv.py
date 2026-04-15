@@ -6,24 +6,21 @@ import time
 
 import TCPTools as TCP
 
-HOST = "127.0.0.1"
-PORT = 9999
-
-# Server settings
-# TODO: implement queue and stuff
-processDelay = 0.5 # How long to process each pkt (in sec)
-queueSize = 40 # How many packets to queue before dropping?
-lossRate = 0.01 # How likely is packet loss?
-
 log = open("SUSS.log", 'a')
 log.write("--- SUSS Log ---\n")
 
-### Main loop
+# Network
+HOST = "127.0.0.1"
+PORT = 9999
 
+processDelay = 0.1 # How long to process each pkt (in sec)
+
+
+# Main
 while True:
     s = TCP.Server(HOST, PORT) # Create a server
 
-    seq=0 # seq counter
+    seq = 0 # seq counter
 
     while True:
         time.sleep(processDelay) # Each pkt takes time to process

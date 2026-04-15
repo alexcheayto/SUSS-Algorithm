@@ -2,8 +2,9 @@
 # Collection of funcs to help emulate TCP functionality
 
 import socket
+import time   # Timestamps
 import random # RNG packet data
-import string
+import string #
 
 # Prints and logs at the same time
 def printLog(logfile, s:str):
