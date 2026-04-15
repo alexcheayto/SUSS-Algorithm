@@ -13,7 +13,7 @@ HOST = '127.0.0.1'
 PORT = 9999
 
 # Adjust these to change behavior of nw
-totalPkts = 100 # how many pkts to send?
+totalPkts = 100 # how mae.time()ny pkts to send?
 roundLength = 4.0 # Round Length in sec
 
 lastPktSent = 0 # Increments with each pkt
@@ -50,13 +50,22 @@ def Pace(phaseLength, phasePkts):
     global lastPktSent
 
     for i in range(lastPktSent, lastPktSent + phasePkts):
+       
         lastPktSent = i
         fin = (i == totalPkts-1)
 
         # Create a packet, send it and await ACK
         pkt = TCP.Packet(i, FIN=fin)
         TCP.Send(s, pkt, log)
+
+        starttime = time.time()
         TCP.Recieve(s, log)
+        
+        ###track and write the time it took for each packet
+        if log!=None: truetime = time.time() - starttime
+        else:truetime = starttime
+        #print(f"TIME TO TAKE {truetime}")
+        TCP.printLog(log, f"TIME TO TAKE {truetime}")
 
         if fin: break # break early if sent last pkt
         else: time.sleep(phaseLength / phasePkts) # pace pkts evenly
@@ -78,10 +87,11 @@ while not fin: # Go until sent all pkts
     Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
 
     ClockActual = time.time() - roundStart # How long was clock phase?
-
+    
     Guard(roundStart + roundLength * 2/8) # Guard phase: wait to give clock phase time
 
     Pace(roundLength * 6/8, roundSize - int(math.sqrt(roundSize))) # Pace the rest of the pkts
 
+   
     # Gi estimation based on clock phase measurements
     roundSize *= Gi
