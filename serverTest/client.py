@@ -1,6 +1,5 @@
 # Client.py
 
-import socket
 import time
 
 import TCPTools as TCP

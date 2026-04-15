@@ -1,62 +1,28 @@
 ### SUSSsend.py
-# Allows sending packets between Hosts A <-> B, while logging each packet
-# Simulates either SUSS or traditional TCP sending behavior
+# Sends packets A -> B according to a simplified SUSS algorithm
 
 import time
 
 import TCPTools as TCP
 
-# Networking
-loopback = '127.0.0.1'
-HostA = '10.0.1.1'
-HostB = '10.0.2.2'
+HOST = '127.0.0.1'
+PORT = 9999
 
-PORT = 9999 # TODO: idk what port to use, dont think it matters
-dest = ''
+log = open("SUSS.log", 'a')
 
-SUSS = None # Set to true if A -> B, false if B -> A
+# TODO: Custom input size
+# int(input("How many pkts to send? "))
+numPkts = 10
 
-# Logging
-logfile = open("SUSSsend.log", 'a')
-logfile.write("--- SUSSsend.py Log ---\n")
+# G
 
+s = TCP.Client(HOST, PORT)
 
-# Prompt to set dest to either A or B
-while not dest:
-    # TODO: Can just get self ip, if A then set dest to B and vice versa.
-    dest = input("Enter Destination Host (A/B): ")
+for i in range(numPkts):
+    time.sleep(0.5)
 
-    if   dest in ['a','A']: dest = HostA
-    elif dest in ['b','B']: dest = HostB
-    else                    dest = ''
+    pkt = TCP.Packet(i, FIN=(i == numPkts-1)) # Create a packet
 
-    if dest:
-        SUSS = (dest == HostB) # A -> B uses SUSS, B -> A does not
-        dest = socket.gethostbyname(dest)
+    TCP.Send(s, pkt, log)
+    TCP.Recieve(s, log)
 
-
-while True: # Main Loop
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.connect((loopback, port)) # socket for server
-
-    numPkts = int(input("How many packets to send? (try 10): "))
-    for i in range(numPkts):
-        TCP.send(f"packet #{numPkts}")
-        time.sleep(0.5)
-
-
-### TODO: Pseudocode for now
-# create some kind of tcp struct that stores the cwnd,
-# and also has SUSS info like estimated ceiling
-#
-# # Server processing
-# need some kind of network state struct (perhaps stored on the server
-# script) that defines probabilities to randomly drops packets (simulate packet
-# loss) and keeps a buffer of pkts that it processes (simulate the real cwnd).
-# Process packets once per 100ms or something idk, acking them once 'processed'.
-# This allows the ACK clocking to work
-#
-# # SUSS Algo
-# # TODO: see fig7 in the paper
-# we have to keep track of various params like expGrowth, cwnd, blue/red ACKS,
-# RTT, etc.
