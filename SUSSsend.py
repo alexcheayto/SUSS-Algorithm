@@ -37,7 +37,7 @@ def Clock(phaseLength, phasePkts): # Send pkts in a burst
         # Create a packet, send it and await ACK
         pkt = TCP.Packet(i, FIN=fin)
         TCP.Send(s, pkt, log)
-        TCP.Recieve(s, log)
+        TCP.Recieve(s)
 
 def Guard(endTime): # Wait until a specific time
     guarding = True
@@ -75,23 +75,36 @@ s = TCP.Client(HOST, PORT) # Connect to server
 while not fin: # Go until sent all pkts
 
     roundNum += 1
-    print(f"Round {roundNum}: {roundSize}")
+    print(f"=== Round {roundNum}: {roundSize} ===")
 
     if not slowStart or lastPktSent + roundSize > totalPkts: # exited SS or final round
+        print("--- Exited Slow Start ---")
         Pace(roundLength, roundSize) # Just send pkts evenly
         break
 
     roundStart = time.time()
-    ClockEst = roundStart + roundLength * 1/8 # Benchmark for upcoming clock
+    clockEst = roundLength * 1/8 # Benchmark for upcoming clock
 
+    print("--- Clock Phase ---")
     Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
 
-    ClockActual = time.time() - roundStart # How long was clock phase?
-    
+    clockActual = time.time() - roundStart # How long was clock phase?
+
+    print("--- Guard Phase ---")
     Guard(roundStart + roundLength * 2/8) # Guard phase: wait to give clock phase time
 
+    print("--- Pace Phase ---")
     Pace(roundLength * 6/8, roundSize - int(math.sqrt(roundSize))) # Pace the rest of the pkts
 
-   
-    # Gi estimation based on clock phase measurements
+    print("--- Gi Estimation ---")
+    ratio = clockActual / clockEst
+    if   ratio < 0.5: Gi = 4 # Far from optimal, SUSS
+    elif ratio < 1.0: Gi = 2 # Nearing optimal, traditional SS
+    else: slowStart = False # Close to optimal, exit slow start
+
+    print(f"Est    = {clockEst}")
+    print(f"Actual = {clockActual}")
+    print(f"Ratio  = {ratio}")
+    print(f"Gi     = {Gi}")
+
     roundSize *= Gi
