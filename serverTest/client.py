@@ -3,6 +3,8 @@
 import socket
 import time
 
+import TCPTools as TCP
+
 HOST = "127.0.0.1"
 PORT = 9999
 

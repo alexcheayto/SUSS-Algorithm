@@ -31,3 +31,5 @@ while True: # Main loop
                 if data[-1:] == '\n'.encode(): break # End connection on newline
 
         print(f"Connection closed from {addr}")
+
+# TODO: queue and stuff
