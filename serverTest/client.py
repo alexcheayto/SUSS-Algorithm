@@ -8,19 +8,15 @@ import TCPTools as TCP
 HOST = "127.0.0.1"
 PORT = 9999
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    print(f"Connected to {HOST}:{PORT}")
+numPkts = 10 # How many pkts to send
 
-    i = 0
-    for letter in "bruh\n":
-        s.send(f"SEQ {i} {letter}".encode())
-        print(f"-> SEQ {i} {letter}")
+log = open("SUSS.log", 'a')
 
-        time.sleep(0.5)
+s = TCP.Client(HOST, PORT)
 
-        data = s.recv(1024)
-        print(f"<- {data}")
+for i in range(numPkts):
+    time.sleep(0.5)
 
-        i += 1
+    pkt = TCP.Packet(i, FIN=(i == numPkts)) # Create a packet
 
+    TCP.Send(s, pkt, log)

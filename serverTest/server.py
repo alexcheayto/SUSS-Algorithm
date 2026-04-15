@@ -1,35 +1,44 @@
-# Server.py
+### Server.py
+# Listens for connections and ACKs packets sent to it
 
 import socket
 import time
 
+import TCPTools as TCP
+
 HOST = "127.0.0.1"
 PORT = 9999
 
-while True: # Main loop
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Enable reuse
+# Server settings
+# TODO: implement queue and stuff
+processDelay = 0.5 # How long to process each pkt (in sec)
+queueSize = 40 # How many packets to queue before dropping?
+lossRate = 0.01 # How likely is packet loss?
 
-        print(f"Listening on port {PORT}")
-        s.bind((HOST, PORT))
-        s.listen()
-        conn, addr = s.accept()
+log = open("SUSS.log", 'a')
+log.write("--- SUSS Log ---\n")
 
-        with conn:
-            print(f"Connection from {addr}")
-            while True:
-                time.sleep(0.5)
-                data = conn.recv(1024)
+### Main loop
 
-                if not data: continue
-                print(f"<- {data.decode()}")
+while True:
+    s = TCP.Server(HOST, PORT) # Create a server
 
-                conn.sendall(f"ACK {data}".encode())
-                print(f"-> ACK {data.decode()}")
+    seq=0 # seq counter
 
-                print (f"datalast = {data[-1:]}")
-                if data[-1:] == '\n'.encode(): break # End connection on newline
+    while True:
+        time.sleep(processDelay) # Each pkt takes time to process
 
-        print(f"Connection closed from {addr}")
+        recv = TCP.Recieve(s, log)
+        if not recv: continue # no data? just wait for more
 
-# TODO: queue and stuff
+        recvPkt = TCP.Parse(recv)
+
+        pkt = TCP.Packet(recvPkt[0], client=False) # Create an ACK packet and send it back
+        TCP.Send(s, pkt, log)
+
+        lastByte = recvPkt[1][-1:]
+        print (f"lastByte = {lastByte}")
+        if lastByte == '\n': break # End connection on newline
+
+    print(f"Connection closed from {addr}")
+
