@@ -37,8 +37,8 @@ while True:
         TCP.Send(s, pkt, log)
 
         lastByte = recvPkt[1][-1:]
-        print (f"lastByte = {lastByte}")
+        # print (f"lastByte = {lastByte.encode()}") # Debug print
         if lastByte == '\n': break # End connection on newline
 
-    print(f"Connection closed from {addr}")
+    print(f"Connection closed")
 

@@ -3,6 +3,7 @@
 
 import socket
 import random # RNG packet data
+import string
 
 # Prints and logs at the same time
 def printLog(logfile, s:str):
@@ -19,7 +20,7 @@ def Packet(num, client:bool = True, FIN=False) -> str:
     # Packet data is just 4 random letters
     data =  ''.join(random.choice(string.ascii_lowercase) for i in range(4))
 
-    pkt = f"{num} - {data if client else ''}"
+    pkt = f"{num} - {data if client else 'ACK'}"
     if FIN: pkt += '\n' # End connection on newline
 
     return pkt
@@ -34,7 +35,7 @@ def Parse(pkt):
 
 # Send data on a socket
 def Send(socket, pkt, log=None):
-    socket.sendall(msg.encode())
+    socket.sendall(pkt.encode())
     if log is not None: printLog(log, f"-> {pkt}")
 
 # Recieve data from a socket

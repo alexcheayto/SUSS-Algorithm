@@ -17,6 +17,7 @@ s = TCP.Client(HOST, PORT)
 for i in range(numPkts):
     time.sleep(0.5)
 
-    pkt = TCP.Packet(i, FIN=(i == numPkts)) # Create a packet
+    pkt = TCP.Packet(i, FIN=(i == numPkts-1)) # Create a packet
 
     TCP.Send(s, pkt, log)
+    TCP.Recieve(s, log)
