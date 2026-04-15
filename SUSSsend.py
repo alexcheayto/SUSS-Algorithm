@@ -50,7 +50,6 @@ def Pace(phaseLength, phasePkts):
     global lastPktSent
 
     for i in range(lastPktSent, lastPktSent + phasePkts):
-       
         lastPktSent = i
         fin = (i == totalPkts-1)
 
@@ -60,12 +59,6 @@ def Pace(phaseLength, phasePkts):
 
         starttime = time.time()
         TCP.Recieve(s, log)
-        
-        ###track and write the time it took for each packet
-        if log!=None: truetime = time.time() - starttime
-        else:truetime = starttime
-        #print(f"TIME TO TAKE {truetime}")
-        TCP.printLog(log, f"TIME TO TAKE {truetime}")
 
         if fin: break # break early if sent last pkt
         else: time.sleep(phaseLength / phasePkts) # pace pkts evenly

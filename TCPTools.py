@@ -9,8 +9,8 @@ import string #
 # Prints and logs at the same time
 def printLog(logfile, s:str):
     print(s)
-    logfile.write(s+'\n')
-    # TODO: probably log a timestamp before each msg
+    ts = str(round(time.time() % 1000, 3))
+    logfile.write(ts+s+'\n')
 
 # Create a Packet with SEQ/ACK number and (optional) data
 # pkt format: 000 - abcd
