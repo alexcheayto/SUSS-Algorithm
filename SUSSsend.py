@@ -30,7 +30,7 @@ def Clock(phaseLength, phasePkts): # Send pkts in a burst
     global fin
     global lastPktSent
 
-    for i in range(lastPktSent, lastPktSent + phasePkts):
+    for i in range(lastPktSent + 1, lastPktSent + phasePkts):
         lastPktSent = i
         fin = (i == totalPkts-1)
 
@@ -49,7 +49,7 @@ def Pace(phaseLength, phasePkts):
     global fin
     global lastPktSent
 
-    for i in range(lastPktSent, lastPktSent + phasePkts):
+    for i in range(lastPktSent + 1, lastPktSent + phasePkts):
         lastPktSent = i
         fin = (i == totalPkts-1)
 
