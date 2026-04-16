@@ -14,9 +14,9 @@ PORT = 9999
 
 # Adjust these to change behavior of nw
 totalPkts = 500 # how many pkts to send?
-roundLength = 4.0 # Round Length in sec
+roundLength = 2.0 # Round Length in sec
 
-lastPktSent = -1 # Increments with each pkt
+lastPktSent = 0 # Increments with each pkt
 fin = False # True for the final pkt
 
 # SUSS Slow-Start estimation
@@ -30,14 +30,15 @@ def Clock(phaseLength, phasePkts): # Send pkts in a burst
     global fin
     global lastPktSent
 
-    for i in range(lastPktSent + 1, lastPktSent + phasePkts):
-        lastPktSent = i
+    for i in range(phasePkts):
         fin = (i == totalPkts-1)
 
         # Create a packet, send it and await ACK
-        pkt = TCP.Packet(i, FIN=fin)
+        pkt = TCP.Packet(lastPktSent, FIN=fin)
         TCP.Send(s, pkt, log)
         TCP.Recieve(s)
+
+        lastPktSent += 1
 
 def Guard(endTime): # Wait until a specific time
     guarding = True
@@ -49,19 +50,20 @@ def Pace(phaseLength, phasePkts):
     global fin
     global lastPktSent
 
-    for i in range(lastPktSent + 1, lastPktSent + phasePkts):
-        lastPktSent = i
-        fin = (i == totalPkts-1)
+    for i in range(phasePkts):
+        fin = (lastPktSent == totalPkts-1)
 
         # Create a packet, send it and await ACK
-        pkt = TCP.Packet(i, FIN=fin)
+        pkt = TCP.Packet(lastPktSent, FIN=fin)
         TCP.Send(s, pkt, log)
-
-        starttime = time.time()
         TCP.Recieve(s, log)
 
+        lastPktSent += 1
+
         if fin: break # break early if sent last pkt
-        else: time.sleep(phaseLength / phasePkts) # pace pkts evenly
+        else:
+            time.sleep(phaseLength / phasePkts) # pace pkts evenly
+            # print(f"sleplen={phaseLength / phasePkts}")
 
 # Main
 s = TCP.Client(HOST, PORT) # Connect to server
@@ -71,14 +73,14 @@ while not fin: # Go until sent all pkts
     print(f"=== Round {roundNum} ===")
 
     if not slowStart or lastPktSent + roundSize + roundNum > totalPkts: # exited SS or final round
-        print("--- AIMD ---")
+        print(f"--- AIMD ({roundSize+roundNum})---")
         Pace(roundLength, roundSize + roundNum) # Just send pkts evenly
 
     else:
         roundStart = time.time()
         clockEst = roundLength * 1/8 # Benchmark for upcoming clock
 
-        print("--- Clock Phase ---")
+        print(f"--- Clock Phase ({int(math.sqrt(roundSize))})---")
         Clock(roundLength * 1/8, int(math.sqrt(roundSize))) # send clock pkts
 
         clockActual = time.time() - roundStart # How long was clock phase?

@@ -14,13 +14,13 @@ PORT = 9999
 
 # Packet config
 totalPkts   = 500   # Must match SUSSsend.py
-roundLength = 4.0
+roundLength = 2.0
 
 lastPktSent = 0
 fin         = False
 
 cwnd      = 4
-ssthresh  = 64
+ssthresh  = 256
 roundNum  = 0
 
 def send_window(window_size):
@@ -44,6 +44,7 @@ def send_window(window_size):
 
 
         time.sleep(roundLength / pkts_this_round)
+        # print(f"sleplen={roundLength / pkts_this_round}")
 
 #Main
 s = TCP.Client(HOST, PORT)
