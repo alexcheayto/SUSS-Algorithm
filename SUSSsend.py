@@ -16,7 +16,7 @@ PORT = 9999
 totalPkts = 500 # how many pkts to send?
 roundLength = 4.0 # Round Length in sec
 
-lastPktSent = 0 # Increments with each pkt
+lastPktSent = -1 # Increments with each pkt
 fin = False # True for the final pkt
 
 # SUSS Slow-Start estimation

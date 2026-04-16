@@ -19,7 +19,7 @@ roundLength = 4.0
 lastPktSent = 0
 fin         = False
 
-cwnd      = 1
+cwnd      = 4
 ssthresh  = 64
 roundNum  = 0
 
