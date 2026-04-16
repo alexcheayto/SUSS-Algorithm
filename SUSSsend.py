@@ -13,7 +13,7 @@ HOST = '127.0.0.1'
 PORT = 9999
 
 # Adjust these to change behavior of nw
-totalPkts = 1000 # how many pkts to send?
+totalPkts = 500 # how many pkts to send?
 roundLength = 4.0 # Round Length in sec
 
 lastPktSent = 0 # Increments with each pkt
