@@ -8,9 +8,15 @@ We were able to recreate and analyze the differences between normal TCP and SUSS
 
 To demonstrate network capabilities we also created a simple minet of 2 hosts. 
 
-![[intro1.png]]
+![intro1.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro1.png)
 
-![[intro2.png]]
+![intro2.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro2.png)
+
+## Python Instructions
+For running the program in python alone just open two terminal windows in whatever device you have that has Python3 installed and run **python3 Server.py** in one window. 
+In another window run **Python3 SUSSsend.py** and once it's finished run **Python3 TCPsend.py**
+
+For accurate results make sure TCP.log and SUSS.log are empty. Data stored is the time a packet recieved an ACK.
 ## Mininet and P4 Instructions
 
 You will first need an environment setup for P4. We will be using Ubuntu image from this repository. If you need help setting up the environment for P4 or unsure just follow the instructions in the repository link below. 
@@ -28,7 +34,7 @@ In the mininet terminal start two instances of hosts using **xterm h1 h2**
 
 At this point you should have this outcome. 
 
-![[mininetimage.png.png]]
+![mininetimage.png.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/mininetimage.png.png)
 
 For mininet you would have to update the two host ip addresses. In Node:h2 edit the file Server.py with nano  and change the HOST address to 10.0.2.2. In node:h1 do the same for the files SUSSsend.py, and TCPsend.py.
 
@@ -38,6 +44,12 @@ in Node:h2 run **python Server.py**
 in Node:h1 run **python SUSSsend.py** once SUSSsend.py is finished run **python TCPsend.py**
 
 this should be your final output with the numbers of course being different. 
-![[mininetimage1.png.png]]
+![mininetimage1.png.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/mininetimage1.png.png)
 
 Data in the log files stores the time when an ACK packet is received. 
+
+## Our Results:
+May differ from yours we have stored them in this google sheet available to anyone to view. We simply compared the speed by the time it took for packets to recieve an ACK for SUSS and regular TCP.
+https://docs.google.com/spreadsheets/d/1Sn2767RZdpKYI-auLC4sWGnP_-sWX7QkhucRhfWD6gg/edit?usp=sharing
+
+![results.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/results.png)
