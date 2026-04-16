@@ -9,7 +9,7 @@ import TCPTools as TCP
 log = open("TCP.log", 'a')
 
 # Network
-HOST = '127.0.0.1'
+HOST = '127.0.0.1' # On mininet use 10.0.2.2
 PORT = 9999
 
 # Packet config

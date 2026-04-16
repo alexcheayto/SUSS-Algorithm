@@ -7,7 +7,7 @@ import time
 import TCPTools as TCP
 
 # Network
-HOST = "127.0.0.1"
+HOST = "127.0.0.1" # On Mininet use 10.0.2.2
 PORT = 9999
 
 processDelay = 0.02 # How long to process each pkt (in sec)
