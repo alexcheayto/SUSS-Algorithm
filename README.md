@@ -8,9 +8,9 @@ We were able to recreate and analyze the differences between normal TCP and SUSS
 
 To demonstrate network capabilities we also created a simple minet of 2 hosts. 
 
-![[intro1.png]]
+![intro1.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro1.png)
 
-![[intro2.png]]
+![intro2.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro2.png)
 ## Mininet and P4 Instructions
 
 You will first need an environment setup for P4. We will be using Ubuntu image from this repository. If you need help setting up the environment for P4 or unsure just follow the instructions in the repository link below. 
@@ -28,7 +28,7 @@ In the mininet terminal start two instances of hosts using **xterm h1 h2**
 
 At this point you should have this outcome. 
 
-![[mininetimage.png.png]]
+![mininetimage.png.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/mininetimage.png.png)
 
 For mininet you would have to update the two host ip addresses. In Node:h2 edit the file Server.py with nano  and change the HOST address to 10.0.2.2. In node:h1 do the same for the files SUSSsend.py, and TCPsend.py.
 
@@ -38,6 +38,6 @@ in Node:h2 run **python Server.py**
 in Node:h1 run **python SUSSsend.py** once SUSSsend.py is finished run **python TCPsend.py**
 
 this should be your final output with the numbers of course being different. 
-![[mininetimage1.png.png]]
+![mininetimage1.png.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/mininetimage1.png.png)
 
 Data in the log files stores the time when an ACK packet is received. 
