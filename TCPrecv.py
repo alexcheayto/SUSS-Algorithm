@@ -6,12 +6,12 @@ import time
 
 import TCPTools as TCP
 
-log = open("SUSS.log", 'a')
-log.write("--- SUSS Log ---\n")
+log = open("TCP.log", 'a')
+log.write("--- TCP Log ---\n")
 
 # Network
 HOST = "127.0.0.1"
-PORT = 9999
+PORT = 9998
 
 processDelay = 0.0# How long to process each pkt (in sec)
 

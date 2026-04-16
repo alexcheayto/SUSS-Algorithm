@@ -10,7 +10,8 @@ import string #
 def printLog(logfile, s:str):
     print(s)
     ts = str(round(time.time() % 1000, 3))
-    logfile.write(ts+s+'\n')
+    if 'ACK' in s:
+        logfile.write(ts+'\n')
 
 # Create a Packet with SEQ/ACK number and (optional) data
 # pkt format: 000 - abcd
