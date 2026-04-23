@@ -1,20 +1,53 @@
-# SUSS-Algorithm
+# SUSS Replication
 
-**SUSS** = **S**peeding **U**p **S**low **S**tart
-Our goal was to replicate the SUSS algorithm created from this paper: 
+Our goal was to replicate performance gains of the SUSS algorithm from this SIGCOMM '24 paper: 
 > Mahdi Arghavani, Haibo Zhang, David Eyers, and Abbas Arghavani. 2024. SUSS: Improving TCP Performance by Speeding Up Slow-Start. In Proceedings of the ACM SIGCOMM 2024 Conference (ACM SIGCOMM '24). Association for Computing Machinery, New York, NY, USA, 151–165. https://doi.org/10.1145/3651890.3672234
 
-We were able to recreate and analyze the differences between normal TCP and SUSS. In a smaller environment using python. 
+We were able to recreate and analyze the differences between normal TCP and SUSS on a small flow, albeit in a more constrained environment than the original authors, using Python and Mininet.
 
+## SUSS Paper
+**SUSS**: **S**peeding **U**p **S**low **S**tart
+
+summary of paper
+
+main contributions
+^ observation of small flows
+
+importance
+
+
+
+## Chosen Claim
+
+chosen claim (speific figure)
+
+meaning of claim
+
+replication feasability
+^ contrast to other claims that are not feasible
+say smth like "relevant to any TCP flow on any hardware, since all tcp connections will go through the slow-start phase"
+
+
+## Paper Methodology
+
+Specifically to the claim we are replicating not their whole cloud test stuff
+
+
+## Our Methodology
 To demonstrate network capabilities we also created a simple minet of 2 hosts. 
 
 ![intro1.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro1.png)
 
 ![intro2.png](https://github.com/alexcheayto/SUSS-Algorithm/blob/main/images/intro2.png)
 
-## Python Instructions
-For running the program in python alone just open two terminal windows in whatever device you have that has Python3 installed and run **python3 Server.py** in one window. 
-In another window run **Python3 SUSSsend.py** and once it's finished run **Python3 TCPsend.py**
+## Standalone Instructions
+
+1. Open two terminals
+2. Terminal A: run Server.py, the server will listen for packets and respond with ACKs 
+3. Terminal B: run SUSSsend.py, then run Python3 TCPsend.py.
+
+Logfiles are SUSS.log and TCP.log
+
 
 For accurate results make sure TCP.log and SUSS.log are empty. Data stored is the time a packet recieved an ACK.
 ## Mininet and P4 Instructions
